@@ -1,11 +1,11 @@
 "use strict";
 
 /**
-Title of Project
-Author Name
+DiCaprio Is Drowning!
+Hugo Agnola!
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+In this short simulation the user will use their finger to swing their weapon around.
+This simulation includes responsive voice, annyang, and ml5.js
 */
 
 //DiCaprio Head
