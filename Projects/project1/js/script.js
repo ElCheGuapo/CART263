@@ -169,7 +169,7 @@ function handleDiCaprio() {
             fill(4, 4, 255);
             noStroke();
             image(dicaprioCry, dHead.x, dHead.y, dHead.size, dHead.size);
-            console.log("hit yet");
+            console.log("hit");
             counter = counter + 1 * (deltaTime / 900);
             //ellipse(hitBox.x, hitBox.y, hitBox.size);
         pop();
