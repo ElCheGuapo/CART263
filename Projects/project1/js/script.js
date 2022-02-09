@@ -24,7 +24,7 @@ function setup() {
 }
 
 function keyPressed() {
-  if (keyCode === 87) {
+  if (keyCode === W) {
     console.log("forward");
   } else if (keyCode === 65) {
     console.log("left");
