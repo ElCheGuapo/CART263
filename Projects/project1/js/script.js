@@ -23,7 +23,7 @@ function setup() {
 
 }
 
-function mousePressed() {
+function keyPressed() {
   if (keyCode === 87) {
     console.log("forward");
   } else if (keyCode === 65) {
