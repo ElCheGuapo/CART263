@@ -26,7 +26,7 @@ function setup() {
 function keyPressed() {
   if (keyCode === W) {
     console.log("forward");
-  } else if (keyCode === 65) {
+  } else if (keyCode === A) {
     console.log("left");
   } else if (keyCode === 83) {
     console.log("backward");
