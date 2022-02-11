@@ -5,6 +5,8 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 */
 
+let player;
+
 "use strict";
 
 
@@ -20,19 +22,34 @@ function preload() {
 Description of setup
 */
 function setup() {
-
+  createCanvas(800, 800);
+  player = new Player(400, 400);
 }
 
-function keyPressed() {
-  if (keyCode === W) {
-    console.log("forward");
-  } else if (keyCode === A) {
-    console.log("left");
-  } else if (keyCode === 83) {
-    console.log("backward");
-  } else if (keyCode === 68) {
-    console.log("right");
+function movementCharacter() {
+  if (keyIsDown(65)) {
+    player.x -= 5;
   }
+  if (keyIsDown(68)) {
+    player.x += 5;
+  }
+
+  if (keyIsDown(87)) {
+    player.y -= 5;
+  }
+
+  if (keyIsDown(83)) {
+    player.y += 5;
+  }
+}
+
+// function mousePressed() {
+//   console.log('debug');
+// }
+
+function handlePlayer() {
+  movementCharacter();
+  player.update();
 }
 
 
@@ -40,5 +57,7 @@ function keyPressed() {
 Description of draw()
 */
 function draw() {
+  background(230);
+  handlePlayer();
 
 }
