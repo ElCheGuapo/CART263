@@ -37,8 +37,8 @@ function mousePressed() {
 // }
 
 function handlePlayer() {
-  movementCharacter();
   player.update();
+  playerMovement();
 }
 
 function handleBullet() {
@@ -51,22 +51,26 @@ function handleBullet() {
   removeBullet();
 }
 
-function movementCharacter() {
+function playerMovement() {
   if (keyIsDown(65)) {
-    player.x -= 5;
+    player.pos.add(-5, 0);
   }
+
   if (keyIsDown(68)) {
-    player.x += 5;
+    player.pos.add(5, 0);
   }
 
   if (keyIsDown(87)) {
-    player.y -= 5;
+    player.pos.add(0, -5);
   }
 
   if (keyIsDown(83)) {
-    player.y += 5;
+    player.pos.add(0, 5);
   }
 }
+// function keyReleased() {
+//   player.vel.mult(0);
+// }
 
 function removeBullet() {
   for (let bullet of bullets) {
@@ -80,11 +84,11 @@ function removeBullet() {
 
 function playerShoot() {
 
-  let v = createVector(mouseX - player.x, mouseY - player.y);
+  let v = createVector(mouseX - player.pos.x, mouseY - player.pos.y);
   v.normalize();
   v.mult(8);
   let bullet = {
-    pos: createVector(player.x, player.y),
+    pos: createVector(player.pos.x, player.pos.y),
     vel: v
   };
 
@@ -96,17 +100,25 @@ function playerShoot() {
 Description of draw()
 */
 function draw() {
-  background(230);
+  background(255, 255, 255);
+  rect(400, 400, 50, 50);
   handlePlayer();
   handleBullet();
 
+  camera.zoom = 1;
+  //
+  camera.position.x = player.pos.x;
+  camera.position.y = player.pos.y;
+
   //limit the ghost movements
-  if(player.x < 0)
-    player.x = 0;
-  if(player.y < 0)
-    player.y = 0;
-  if(player.x > SCENE_W)
-    player.x = SCENE_W;
-  if(player.y > SCENE_H)
-    player.y = SCENE_H;
+  if(player.pos.x < 0)
+    player.pos.x = 0;
+  if(player.pos.y < 0)
+    player.pos.y = 0;
+  if(player.pos.x > SCENE_W)
+    player.pos.x = SCENE_W;
+  if(player.pos.y > SCENE_H)
+    player.pos.y = SCENE_H;
+
+  // camera.off();
 }
