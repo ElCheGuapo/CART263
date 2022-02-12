@@ -11,7 +11,7 @@ class Player {
   display() {
     push();
     fill(0);
-    ellipse(this.x, this.y, 50, 50);
+    ellipse(this.x, this.y, 30, 30);
     pop();
   }
 }

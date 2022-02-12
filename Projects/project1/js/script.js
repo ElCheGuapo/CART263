@@ -18,7 +18,6 @@ function preload() {
 
 }
 
-
 /**
 Description of setup
 */
@@ -42,12 +41,12 @@ function handlePlayer() {
 
 function handleBullet() {
   if (bullets.length > 0) {
-    for (let i = 0; i <= bullets.length; i++) {
-      bullets[i].update();
+    for (let bullet of bullets) {
+      circle(bullet.pos.x, bullet.pos.y, 10);
+      bullet.pos.add(bullet.vel);
     }
-
-    removeBullet();
   }
+  removeBullet();
 }
 
 function movementCharacter() {
@@ -68,23 +67,27 @@ function movementCharacter() {
 }
 
 function removeBullet() {
-  for (let i = 0; i <= bullets.length; i++) {
-    if(bullets[i].x < 0 || bullets[i].x > 800) {
-      bullets[i].splice();
-    }
-    if(bullets[i].y < 0 || bullets[i].y > 800) {
-      bullets[i].splice();
+  for (let bullet of bullets) {
+    if(bullet.x < 0 || bullet.x > 800) {
+      bullet.splice();
+    } else if(bullet.y < 0 || bullet.y > 800) {
+      bullet.splice();
     }
   }
 }
 
 function playerShoot() {
-  let bullet;
-  let v = createVector(player.x - mouseX, player.y - mouseY);
-  v.normalize();
 
-  bullet = new Bullet(v, player.x, player.y);
+  let v = createVector(mouseX - player.x, mouseY - player.y);
+  v.normalize();
+  v.mult(8);
+  let bullet = {
+    pos: createVector(player.x, player.y),
+    vel: v
+  };
+
   bullets.push(bullet);
+  console.log(bullets);
 }
 
 /**
