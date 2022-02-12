@@ -99,4 +99,14 @@ function draw() {
   background(230);
   handlePlayer();
   handleBullet();
+
+  //limit the ghost movements
+  if(player.x < 0)
+    player.x = 0;
+  if(player.y < 0)
+    player.y = 0;
+  if(player.x > SCENE_W)
+    player.x = SCENE_W;
+  if(player.y > SCENE_H)
+    player.y = SCENE_H;
 }
