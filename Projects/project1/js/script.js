@@ -6,6 +6,7 @@ author, and this description to match your project!
 */
 
 let player;
+let bullets = [];
 
 "use strict";
 
@@ -26,6 +27,29 @@ function setup() {
   player = new Player(400, 400);
 }
 
+function mousePressed() {
+  playerShoot();
+}
+
+// function mousePressed() {
+//   console.log('debug');
+// }
+
+function handlePlayer() {
+  movementCharacter();
+  player.update();
+}
+
+function handleBullet() {
+  if (bullets.length > 0) {
+    for (let i = 0; i <= bullets.length; i++) {
+      bullets[i].update();
+    }
+
+    removeBullet();
+  }
+}
+
 function movementCharacter() {
   if (keyIsDown(65)) {
     player.x -= 5;
@@ -43,15 +67,25 @@ function movementCharacter() {
   }
 }
 
-// function mousePressed() {
-//   console.log('debug');
-// }
-
-function handlePlayer() {
-  movementCharacter();
-  player.update();
+function removeBullet() {
+  for (let i = 0; i <= bullets.length; i++) {
+    if(bullets[i].x < 0 || bullets[i].x > 800) {
+      bullets[i].splice();
+    }
+    if(bullets[i].y < 0 || bullets[i].y > 800) {
+      bullets[i].splice();
+    }
+  }
 }
 
+function playerShoot() {
+  let bullet;
+  let v = createVector(player.x - mouseX, player.y - mouseY);
+  v.normalize();
+
+  bullet = new Bullet(v, player.x, player.y);
+  bullets.push(bullet);
+}
 
 /**
 Description of draw()
@@ -59,5 +93,5 @@ Description of draw()
 function draw() {
   background(230);
   handlePlayer();
-
+  handleBullet();
 }
