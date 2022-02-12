@@ -7,6 +7,8 @@ author, and this description to match your project!
 
 let player;
 let bullets = [];
+var SCENE_W = 1600;
+var SCENE_H = 1600;
 
 "use strict";
 
