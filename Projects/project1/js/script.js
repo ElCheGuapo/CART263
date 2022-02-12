@@ -1,31 +1,29 @@
 /**
 Hotline Deadpool
-Author Name
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Hugo Agnola
+You play as Deadpool in the intro scene to the first movie where he in on the
+bridge fighting multiple enemies. Let's see how many waves you can get through!!
 */
 
-let player;
+let player, bg;
 let bullets = [];
 var SCENE_W = 1600;
-var SCENE_H = 1600;
+var SCENE_H = 800;
 
 "use strict";
-
 
 /**
 Description of preload
 */
 function preload() {
-
+  bg = loadImage('assets/images/BackgroundLoop1.png');
 }
-
 /**
 Description of setup
 */
 function setup() {
-  createCanvas(800, 800);
-  player = new Player(400, 400);
+  createCanvas(800, 400);
+  player = new Player(SCENE_W/2, 550);
 }
 
 function mousePressed() {
@@ -83,8 +81,7 @@ function removeBullet() {
 }
 
 function playerShoot() {
-
-  let v = createVector(mouseX - player.pos.x, mouseY - player.pos.y);
+  let v = createVector(camera.mouseX - player.pos.x, camera.mouseY - player.pos.y);
   v.normalize();
   v.mult(8);
   let bullet = {
@@ -93,19 +90,11 @@ function playerShoot() {
   };
 
   bullets.push(bullet);
-  console.log(bullets);
+  //console.log(bullets);
 }
 
-/**
-Description of draw()
-*/
-function draw() {
-  background(255, 255, 255);
-  rect(400, 400, 50, 50);
-  handlePlayer();
-  handleBullet();
-
-  camera.zoom = 1;
+function handleCamera() {
+  camera.zoom = 0.6;
   //
   camera.position.x = player.pos.x;
   camera.position.y = player.pos.y;
@@ -119,6 +108,15 @@ function draw() {
     player.pos.x = SCENE_W;
   if(player.pos.y > SCENE_H)
     player.pos.y = SCENE_H;
+}
 
-  // camera.off();
+/**
+Description of draw()
+*/
+function draw() {
+  background(255, 255, 255);
+  image(bg, 0, 0, 1600, 800);
+  handlePlayer();
+  handleBullet();
+  handleCamera();
 }
