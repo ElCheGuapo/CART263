@@ -5,7 +5,7 @@ You play as Deadpool in the intro scene to the first movie where he in on the
 bridge fighting multiple enemies. Let's see how many waves you can get through!!
 */
 
-let player, bg;
+let player, bg, score, fireTrig;
 let enemies = [];
 let bullets = [];
 
@@ -24,12 +24,16 @@ function preload() {
 Description of setup
 */
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(1000, 800);
   player = new Player(SCENE_W/2, 550);
 
+  fireTrig = false;
   setInterval(function() {
-    console.log("spawn enemy");
-  }, 2000)
+    for (let i = 0; i <= 5; i++) {
+      createEnemies();
+    }
+    //console.log(enemies);
+  }, 5000);
 }
 
 function mousePressed() {
@@ -53,9 +57,61 @@ function createEnemies() {
   enemies.push(enemy);
 }
 
+function enemyShoot() {
+  if (enemies.length > 0) {
+    for (let enemy of enemies) {
+      let v = createVector(player.pos.x - enemy.pos.x, player.pos.y - enemy.pos.x);
+      v.normalize();
+      v.mult(7);
+
+      let bullet = {
+        pos: createVector(enemy.pos.x, enemy.pos.y),
+        vel: v
+      };
+      bullets.push(bullet);
+    }
+  }
+}
+
+function enemyMovement() {
+  for (let enemy of enemies) {
+    if (enemy.pos.x < 600 || enemy.pos.x > 1000) {
+      let v = createVector(player.pos.x - enemy.pos.x, player.pos.y - enemy.pos.y);
+      v.normalize();
+      v.mult(0.2);
+
+      enemy.pos.add(v);
+    }
+  }
+}
+
+function bulletCollisionEnemy() {
+  for (let i = 0; i < enemies.length; i++) {
+    for (let bullet of bullets) {
+      let d = dist(bullet.pos.x, bullet.pos.y, enemies[i].pos.x, enemies[i].pos.y);
+
+      if (d < enemies[i].size + 10) {
+        console.log("collision detected");
+        enemies.splice(i, 1);
+      }
+    }
+  }
+}
+
 function handlePlayer() {
   player.update();
   playerMovement();
+}
+
+function handleEnemies() {
+  for (let enemy of enemies) {
+    enemy.update();
+    enemyMovement();
+    bulletCollisionEnemy();
+  }
+  if(enemies.length === 0) {
+    createEnemies();
+  }
 }
 
 function handleBullet() {
@@ -135,7 +191,10 @@ Description of draw()
 function draw() {
   background(255, 255, 255);
   image(bg, 0, 0, 1600, 800);
+
   handlePlayer();
+  handleEnemies();
+
   handleBullet();
   handleCamera();
 }

@@ -2,6 +2,7 @@ class Enemy {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
+    this.size = 30;
   }
 
   update() {
@@ -11,8 +12,8 @@ class Enemy {
 
   display() {
     push();
-    fill(50);
-    ellipse(this.pos.x, this.pos.y, 30, 30);
+    fill(150);
+    ellipse(this.pos.x, this.pos.y, this.size, this.size);
     pop();
   }
 
