@@ -6,7 +6,9 @@ bridge fighting multiple enemies. Let's see how many waves you can get through!!
 */
 
 let player, bg;
+let enemies = [];
 let bullets = [];
+
 var SCENE_W = 1600;
 var SCENE_H = 800;
 
@@ -24,6 +26,10 @@ Description of setup
 function setup() {
   createCanvas(800, 400);
   player = new Player(SCENE_W/2, 550);
+
+  setInterval(function() {
+    console.log("spawn enemy");
+  }, 2000)
 }
 
 function mousePressed() {
@@ -33,6 +39,19 @@ function mousePressed() {
 // function mousePressed() {
 //   console.log('debug');
 // }
+
+function createEnemies() {
+  let Ex = random(0, 10);
+  if (Ex > 5) {
+    Ex = SCENE_W;
+  } else if (Ex < 5) {
+    Ex = 0;
+  }
+  let Ey = random(0, SCENE_H);
+
+  let enemy = new Enemy(Ex, Ey);
+  enemies.push(enemy);
+}
 
 function handlePlayer() {
   player.update();
