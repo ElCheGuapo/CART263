@@ -1,8 +1,9 @@
 class Player {
-  constructor(x, y) {
+  constructor(x, y, hp) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
     this.size = 30;
+    this.hp = hp;
   }
 
   update() {
