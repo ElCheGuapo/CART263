@@ -141,15 +141,21 @@ function playerMovement() {
 }
 
 function bulletCollisionEnemy() {
-  for (let i = 0; i < enemies.length; i++) {
-    for (let i = 0; i < bullets.length; i++) {
-      let d = dist(bullets[i].pos.x, bullets[i].pos.y, enemies[i].pos.x, enemies[i].pos.y);
+  for (let enemy of enemies) {
+    for (let bullet of bullets) {
 
-      if (d < enemies[i].size + 10) {
+      /**
+      FIX THIS ISSUE :
+      >>>>>> Uncaught TypeError: Cannot read properties of undefined (reading 'pos') <<<<<<
+      */
+
+      let d = dist(bullet.pos.x, bullet.pos.y, enemy.pos.x, enemy.pos.y);
+
+      if (d < enemy.size + 10) {
         //console.log("collision detected");
-        enemies.splice(i, 1);
-        bullets.splice(i, 1);
-        
+        enemies.splice(enemies.indexOf(enemy), 1);
+        bullets.splice(bullets.indexOf(bullet), 1);
+
         score ++;
       }
     }
@@ -157,15 +163,11 @@ function bulletCollisionEnemy() {
 }
 
 function bulletCollisionPlayer() {
-  for (let i = 0; i < enemyBullets.length; i++) {
-    /**
-    FIX THIS ISSUE :
-    >>>>>> Uncaught TypeError: Cannot read properties of undefined (reading 'pos') <<<<<<
-    */
-    let d = dist(enemyBullets[i].pos.x, enemyBullets[i].pos.y, player.pos.x, player.pos.y);
+  for (let bullet of enemyBullets) {
+    let d = dist(bullet.pos.x, bullet.pos.y, player.pos.x, player.pos.y);
 
     if (d < player.size + 10) {
-      enemyBullets.splice(i, 1);
+      enemyBullets.splice(enemyBullets.indexOf(bullet), 1);
       player.hp -= 10;
     }
   }
@@ -174,7 +176,7 @@ function bulletCollisionPlayer() {
 function handleEnemyWaves() {
   //increase wave cap by one every 10 points in 'score'
   let waveNumber = (waveAmnt - 5);
-  if ((waveNumber * 10) < score && score % 10 === 0) {
+  if ((waveNumber * 5) < score && score % 5 === 0) {
     waveAmnt ++;
   }
 }
@@ -224,9 +226,9 @@ function handleBullets() {
 function removeBullet() {
   for (let bullet of bullets) {
     if(bullet.x < 0 || bullet.x > 800) {
-      bullet.splice();
+      bullets.splice(indexOf(bullet), 1);
     } else if(bullet.y < 0 || bullet.y > 800) {
-      bullet.splice();
+      bullets.splice(indexOf(bullet), 1);
     }
   }
 }
