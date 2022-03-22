@@ -250,6 +250,17 @@ function handleCamera() {
     player.pos.y = SCENE_H;
 }
 
+function flipEnemy(vel) {
+  let xAxis = createVector(width, 0);
+  let movementAngle = xAxis.angleBetween(vel);
+
+  if (movementAngle < 90 && movementAngle > -90) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function handleUI() {
   //display health points
   push();
