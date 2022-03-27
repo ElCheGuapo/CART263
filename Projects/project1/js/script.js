@@ -5,7 +5,7 @@ You play as Deadpool in the intro scene to the first movie where he in on the
 bridge fighting multiple enemies. Let's see how many waves you can get through!!
 */
 
-let player, bg, fireTrig, spawnTrig, timer, pixelFont, waveAmnt, score;
+let player, bg, fireTrig, spawnTrig, timer, pixelFont, waveAmnt, score, playerIdle, playerRuning, enemyRuning;
 let enemies = [];
 let bullets = [];
 let enemyBullets = [];
@@ -20,6 +20,11 @@ Description of preload
 */
 
 function preload() {
+  //images
+  playerIdle = loadImage('assets/images/idlePlayer.gif');
+  playerRuning = loadImage('assets/images/runningPlayer.gif');
+  enemyRuning = loadImage('assets/images/runningEnemy.gif');
+
   bg = loadImage('assets/images/BackgroundLoop1.png');
 
   //fonts
@@ -71,7 +76,7 @@ function createEnemies() {
   }
   let Ey = random(0, SCENE_H);
 
-  let enemy = new Enemy(Ex, Ey);
+  let enemy = new Enemy(Ex, Ey, enemyRuning);
   enemies.push(enemy);
 }
 
@@ -251,7 +256,7 @@ function handleCamera() {
 }
 
 function flipEnemy(vel) {
-  let xAxis = createVector(width, 0);
+  let xAxis = createVector(0, width);
   let movementAngle = xAxis.angleBetween(vel);
 
   if (movementAngle < 90 && movementAngle > -90) {
