@@ -1,40 +1,37 @@
 class Enemy {
-  constructor(x, y, sprite) {
+  constructor(x, y, sprite, sprite2) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
     this.sprite = sprite;
-    this.size = 60;
+    this.sprite2 = sprite2;
+    this.size = 100;
+    this.flipE = false;
   }
 
   update() {
-    this.move();
     this.display();
-  }
-
-  display() {
-    if (this.flip()) {
-      push();
-      fill(150);
-      image(this.sprite, this.pos.x - this.size, this.pos.y, this.pos.x, this.size);
-      pop();
-    } else {
-      push();
-      fill(150);
-      image(this.sprite, this.pos.x, this.pos.y, this.size, this.size);
-      pop();
-    }
-
-  }
-
-  move() {
     this.pos.add(this.vel);
+    this.flip();
   }
 
   flip() {
-    if (this.vel.x <= 0) {
-      return true;
+    if(this.vel.x < 0) {
+      this.flipE = true;
+      console.log(this.flipE);
+    } else if(this.vel.x > 0) {
+      this.flipE = false;
+    }
+  }
+
+  display() {
+    if(this.flipE) {
+      push();
+      image(this.sprite2, this.pos.x, this.pos.y, this.size, this.size);
+      pop();
     } else {
-      return false;
+      push();
+      image(this.sprite, this.pos.x, this.pos.y, this.size, this.size);
+      pop();
     }
   }
 }

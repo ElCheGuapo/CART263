@@ -7,7 +7,7 @@ class Player {
   }
 
   update() {
-    this.pos.add(this.vel);
+    //this.pos.add(this.vel);
     this.display();
   }
 

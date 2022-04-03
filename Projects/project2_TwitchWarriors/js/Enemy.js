@@ -7,34 +7,14 @@ class Enemy {
   }
 
   update() {
-    this.move();
     this.display();
   }
 
   display() {
-    if (this.flip()) {
-      push();
-      fill(150);
-      image(this.sprite, this.pos.x - this.size, this.pos.y, this.pos.x, this.size);
-      pop();
-    } else {
-      push();
-      fill(150);
-      image(this.sprite, this.pos.x, this.pos.y, this.size, this.size);
-      pop();
-    }
 
-  }
-
-  move() {
-    this.pos.add(this.vel);
-  }
-
-  flip() {
-    if (this.vel.x <= 0) {
-      return true;
-    } else {
-      return false;
-    }
+    push();
+    fill(150);
+    image(this.sprite, this.pos.x, this.pos.y, 60, 60);
+    pop();
   }
 }

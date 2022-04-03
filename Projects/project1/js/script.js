@@ -5,45 +5,56 @@ You play as Deadpool in the intro scene to the first movie where he in on the
 bridge fighting multiple enemies. Let's see how many waves you can get through!!
 */
 
-let player, bg, fireTrig, spawnTrig, timer, pixelFont, waveAmnt, score, playerIdle, playerRuning, enemyRuning;
+let player, bg, fireTrig, spawnTrig, timer, pixelFont, waveAmnt, score, playerIdle, playerRuning, playerIdle1, playerRuning1, enemyRuning, enemyRuning2, gameOver, dmgBorder, displayBorder;
 let enemies = [];
 let bullets = [];
 let enemyBullets = [];
 
-var SCENE_W = 1600;
+var SCENE_W = 1650;
 var SCENE_H = 800;
 
 "use strict";
 
-/**
-Description of preload
+/** _____________________
+    Description of preload()
+    _____________________
 */
 
 function preload() {
   //images
   playerIdle = loadImage('assets/images/idlePlayer.gif');
   playerRuning = loadImage('assets/images/runningPlayer.gif');
+  playerIdle1 = loadImage('assets/images/idlePlayer1.gif');
+  playerRuning1 = loadImage('assets/images/runningPlayer1.gif');
   enemyRuning = loadImage('assets/images/runningEnemy.gif');
+  enemyRuning2 = loadImage('assets/images/runningEnemy2.gif');
 
+  dmgBorder = loadImage('assets/images/bloodBorder.png');
   bg = loadImage('assets/images/BackgroundLoop1.png');
 
   //fonts
   pixelFont = loadFont('assets/fonts/Coolville.ttf');
 }
 
-/**
-Description of setup
+/** _____________________
+    Description of setup()
+    _____________________
 */
+
 function setup() {
-  createCanvas(1000, 800);
-  player = new Player(SCENE_W/2, 550, 100);
+  createCanvas(1650, 800);
+
+  player = new Player(SCENE_W/2, 550, 100, playerIdle, playerRuning, playerIdle1, playerRuning1);
 
   waveAmnt = 5;
   score = 0;
 
   fireTrig = false;
   spawnTrig = false;
+  gameOver = false;
+  displayBorder = false;
   timer = 0;
+
   setInterval(function() {
     for (let i = 0; i <= 5; i++) {
       timer++;
@@ -54,7 +65,13 @@ function setup() {
 
 function mousePressed() {
   playerShoot();
-  console.log(player.hp);
+
+  if(mouseX < player.pos.x) {
+    console.log("flip");
+  } else {
+    console.log("flip no");
+  }
+  //console.log(player.hp);
 }
 
 function enemySpawnTimer() {
@@ -62,10 +79,6 @@ function enemySpawnTimer() {
     createEnemies();
   }
 }
-
-// function mousePressed() {
-//   console.log('debug');
-// }
 
 function createEnemies() {
   let Ex = random(0, 10);
@@ -76,19 +89,19 @@ function createEnemies() {
   }
   let Ey = random(0, SCENE_H);
 
-  let enemy = new Enemy(Ex, Ey, enemyRuning);
+  let enemy = new Enemy(Ex, Ey, enemyRuning, enemyRuning2);
   enemies.push(enemy);
 }
 
 function enemyShoot() {
-  if (enemies.length > 0 && timer % 800 === 0) {
+  if (enemies.length > 0 && timer % 400 === 0) {
     for (let enemy of enemies) {
       let v = createVector(player.pos.x - enemy.pos.x, player.pos.y - enemy.pos.y);
       v.normalize();
-      v.mult(7);
+      v.mult(9);
 
       let bullet = {
-        pos: createVector(enemy.pos.x, enemy.pos.y),
+        pos: createVector(enemy.pos.x + 50, enemy.pos.y + 50),
         vel: v
       };
       enemyBullets.push(bullet);
@@ -99,9 +112,9 @@ function enemyShoot() {
 function playerShoot() {
   let v = createVector(camera.mouseX - player.pos.x, camera.mouseY - player.pos.y);
   v.normalize();
-  v.mult(8);
+  v.mult(10);
   let bullet = {
-    pos: createVector(player.pos.x, player.pos.y),
+    pos: createVector(player.pos.x + 50, player.pos.y + 50),
     vel: v
   };
 
@@ -115,10 +128,25 @@ function enemyMovement() {
       if (enemy.pos.x < 600 || enemy.pos.x > 1000) {
         let v = createVector(player.pos.x - enemy.pos.x, player.pos.y - enemy.pos.y);
         v.normalize();
-        v.mult(0.2);
-
-        enemy.pos.add(v);
+        v.mult(0.4);
+        enemy.vel = v;
       }
+    }
+  }
+}
+
+function flipPlayer() {
+  if(player.playerIsMoving) {
+    if(mouseX < player.pos.x) {
+      player.currentSprite = player.spriteRun1;
+    } else {
+      player.currentSprite = player.spriteRun;
+    }
+  } else {
+    if(mouseX < player.pos.x) {
+      player.currentSprite = player.spriteIdle1;
+    } else {
+      player.currentSprite = player.spriteIdle;
     }
   }
 }
@@ -126,22 +154,42 @@ function enemyMovement() {
 function playerMovement() {
   if (keyIsDown(65)) {
     player.pos.add(-5, 0);
+    player.playerIsMoving = true;
   }
 
   if (keyIsDown(68)) {
     player.pos.add(5, 0);
+    player.playerIsMoving = true;
   }
 
   if (keyIsDown(87)) {
     player.pos.add(0, -5);
+    player.playerIsMoving = true;
   }
 
   if (keyIsDown(83)) {
     player.pos.add(0, 5);
+    player.playerIsMoving = true;
   }
+}
 
-  if (keyIsDown(UP_ARROW)) {
-    console.log(waveAmnt);
+function keyReleased() {
+  player.playerIsMoving = false;
+}
+
+function keyPressed() {
+  if(gameOver) {
+    player.hp = 100;
+    waveAmnt = 5;
+    score = 0;
+
+    fireTrig = false;
+    spawnTrig = false;
+    timer = 0;
+
+    setTimeout(function() {
+      gameOver = false;
+    }, 2000);
   }
 }
 
@@ -154,9 +202,9 @@ function bulletCollisionEnemy() {
       >>>>>> Uncaught TypeError: Cannot read properties of undefined (reading 'pos') <<<<<<
       */
 
-      let d = dist(bullet.pos.x, bullet.pos.y, enemy.pos.x, enemy.pos.y);
+      let d = dist(bullet.pos.x, bullet.pos.y, enemy.pos.x + 50, enemy.pos.y + 50);
 
-      if (d < enemy.size + 10) {
+      if (d < enemy.size / 2) {
         //console.log("collision detected");
         enemies.splice(enemies.indexOf(enemy), 1);
         bullets.splice(bullets.indexOf(bullet), 1);
@@ -169,12 +217,25 @@ function bulletCollisionEnemy() {
 
 function bulletCollisionPlayer() {
   for (let bullet of enemyBullets) {
-    let d = dist(bullet.pos.x, bullet.pos.y, player.pos.x, player.pos.y);
+    let d = dist(bullet.pos.x, bullet.pos.y, player.pos.x + 50, player.pos.y + 50);
 
-    if (d < player.size + 10) {
+    if (d < player.size / 2) {
+      displayBorder = true;
       enemyBullets.splice(enemyBullets.indexOf(bullet), 1);
       player.hp -= 10;
+      setTimeout(function() {
+        displayBorder = false;
+      }, 500);
     }
+  }
+}
+
+function displayDMGBorder() {
+  if(displayBorder) {
+    camera.off();
+    push();
+    image(dmgBorder, 0, 0, width, height);
+    pop();
   }
 }
 
@@ -189,6 +250,7 @@ function handleEnemyWaves() {
 function handlePlayer() {
   player.update();
   playerMovement();
+  flipPlayer();
   bulletCollisionPlayer();
 }
 
@@ -210,23 +272,19 @@ function handleEnemies() {
 function handleBullets() {
   if (bullets.length > 0) {
     for (let bullet of bullets) {
-      circle(bullet.pos.x, bullet.pos.y, 10);
+      circle(bullet.pos.x, bullet.pos.y, 20);
       bullet.pos.add(bullet.vel);
     }
   }
 
   if (enemyBullets.length > 0) {
     for (let bullet of enemyBullets) {
-      circle(bullet.pos.x, bullet.pos.y, 10);
+      circle(bullet.pos.x, bullet.pos.y, 20);
       bullet.pos.add(bullet.vel);
     }
   }
-
   removeBullet();
 }
-// function keyReleased() {
-//   player.vel.mult(0);
-// }
 
 function removeBullet() {
   for (let bullet of bullets) {
@@ -255,29 +313,18 @@ function handleCamera() {
     player.pos.y = SCENE_H;
 }
 
-function flipEnemy(vel) {
-  let xAxis = createVector(0, width);
-  let movementAngle = xAxis.angleBetween(vel);
-
-  if (movementAngle < 90 && movementAngle > -90) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function handleUI() {
   //display health points
   push();
   textFont(pixelFont);
 
   textSize(100);
-  fill(0);
-  text(player.hp, width - 195, 100, 100, 100);
+  fill(255, 150, 150);
+  text(player.hp, width - 245, 100, 100, 100);
 
   textSize(100);
   fill(255, 20, 0);
-  text(player.hp, width - 200, 100, 100, 100);
+  text(player.hp, width - 250, 100, 100, 100);
 
   pop();
 
@@ -286,29 +333,56 @@ function handleUI() {
   textFont(pixelFont);
 
   textSize(100);
-  fill(0);
-  text(score, 85, 100, 100, 100);
+  fill(100, 100, 255);
+  text(score, 145, 100, 100, 100);
 
   textSize(100);
   fill(0, 20, 255);
-  text(score, 80, 100, 100, 100);
+  text(score, 140, 100, 100, 100);
 
   pop();
+
+  displayDMGBorder();
 }
 
-/**
-Description of draw()
+/** _____________________
+    Description of draw()
+    _____________________
 */
+
 function draw() {
-  background(255, 255, 255);
-  image(bg, 0, 0, 1600, 800);
+  if(player.hp <= 0) {
+    gameOver = true;
+  }
 
-  handlePlayer();
-  handleEnemies();
+  if(!gameOver) {
+    background(0);
+    image(bg, 0, 0, 1600, 800);
 
-  handleBullets();
-  handleCamera();
+    handlePlayer();
+    handleEnemies();
+
+    handleBullets();
+    handleCamera();
+  }
 
   camera.off();
   handleUI();
+
+  if(gameOver) {
+    camera.off();
+    push();
+    textFont(pixelFont);
+    textSize(100);
+    fill(20);
+    rect(0, 0, width, height);
+    fill(255, 50, 50);
+    text("GAME\nOVER", width/2-100, height/2-300, 100, 200);
+
+    textSize(50);
+    fill(255, 50, 50);
+    text("press any key to continue", width/2-80, height/2, 200, 400);
+    pop();
+  }
+
 }

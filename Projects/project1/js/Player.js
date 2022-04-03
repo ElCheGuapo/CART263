@@ -1,20 +1,26 @@
 class Player {
-  constructor(x, y, hp) {
+  constructor(x, y, hp, spriteI, spriteR, spriteI1, spriteR1) {
     this.pos = createVector(x, y);
-    this.vel = createVector(0, 0);
-    this.size = 30;
+    this.size = 100;
     this.hp = hp;
+    this.spriteIdle = spriteI;
+    this.spriteRun = spriteR;
+    this.spriteIdle1 = spriteI1;
+    this.spriteRun1 = spriteR1;
+
+    this.currentSprite = this.spriteIdle;
+
+    this.playerIsMoving = false;
   }
 
   update() {
-    this.pos.add(this.vel);
     this.display();
   }
 
+
   display() {
     push();
-    fill(0);
-    ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    image(this.currentSprite, this.pos.x, this.pos.y, this.size, this.size);
     pop();
   }
 }
